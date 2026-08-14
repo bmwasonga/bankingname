@@ -32,6 +32,8 @@ export const dictionaries = {
       "For your security, never share your password or OTP. Always access Online Banking via the official CBD website.",
     "login.error": "Invalid username or password.",
     "login.expired": "Your session has expired. Please sign in again.",
+    "login.loading": "Signing you in securely…",
+    "login.loadingWait": "Please wait while we verify your details",
     "login.footer":
       "© {year} Commercial Bank of Dubai PSC · Licensed by the Central Bank of the UAE",
     "accounts.details": "Account details",
@@ -168,6 +170,8 @@ export const dictionaries = {
       "لأمانك، لا تشارك كلمة المرور أو رمز التحقق. ادخل دائماً عبر الموقع الرسمي لبنك دبي التجاري.",
     "login.error": "اسم المستخدم أو كلمة المرور غير صحيحة.",
     "login.expired": "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.",
+    "login.loading": "جاري تسجيل الدخول بشكل آمن…",
+    "login.loadingWait": "يرجى الانتظار ريثما نتحقق من بياناتك",
     "login.footer":
       "© {year} بنك دبي التجاري ش.م.ع · مرخّص من مصرف الإمارات العربية المتحدة المركزي",
     "accounts.details": "تفاصيل الحساب",

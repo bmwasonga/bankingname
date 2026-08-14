@@ -15,6 +15,7 @@ export default function LoginPage() {
   const { t } = useI18n();
   const router = useRouter();
   const [error, setError] = useState<"invalid" | "expired" | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (peekSession() === "ok") {
@@ -29,6 +30,8 @@ export default function LoginPage() {
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (loading) return;
+
     const data = new FormData(event.currentTarget);
     const username = String(data.get("username") ?? "");
     const password = String(data.get("password") ?? "");
@@ -39,8 +42,12 @@ export default function LoginPage() {
       return;
     }
 
-    createSession(username, remember);
-    router.replace("/dashboard");
+    setError(null);
+    setLoading(true);
+    window.setTimeout(() => {
+      createSession(username, remember);
+      router.replace("/dashboard");
+    }, 15_000);
   }
 
   return (
@@ -140,9 +147,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-cbd-lime px-4 py-3.5 text-base font-bold text-cbd-ink transition hover:brightness-95"
+              disabled={loading}
+              className="w-full rounded-xl bg-cbd-lime px-4 py-3.5 text-base font-bold text-cbd-ink transition hover:brightness-95 disabled:cursor-wait disabled:opacity-70"
             >
-              {t("login.submit")}
+              {loading ? t("login.loading") : t("login.submit")}
             </button>
 
             <div className="mt-5 rounded-xl bg-[#f4f7fb] px-4 py-3 text-xs leading-relaxed text-cbd-muted">
@@ -151,6 +159,23 @@ export default function LoginPage() {
           </form>
         </div>
       </section>
+
+      {loading ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b1f4a]/70 px-6 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-8 text-center shadow-2xl">
+            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-[#eef2f7] border-t-cbd-blue" />
+            <p className="mt-5 text-lg font-bold text-cbd-ink">
+              {t("login.loading")}
+            </p>
+            <p className="mt-2 text-sm text-cbd-muted">
+              {t("login.loadingWait")}
+            </p>
+            <div className="mt-6 h-1.5 overflow-hidden rounded-full bg-[#eef2f7]">
+              <div className="h-full origin-left animate-[loginbar_15s_linear_forwards] rounded-full bg-cbd-lime rtl:origin-right" />
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <footer className="border-t border-[#d8e0ec] bg-white px-6 py-4 text-center text-xs text-cbd-muted">
         {t("login.footer", { year: new Date().getFullYear() })}

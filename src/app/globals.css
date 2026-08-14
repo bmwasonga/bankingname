@@ -34,3 +34,12 @@ body {
 html.locale-ar body {
   font-family: var(--font-arabic), var(--font-display), system-ui, sans-serif;
 }
+
+@keyframes loginbar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
