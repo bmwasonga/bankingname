@@ -16,10 +16,6 @@ const cairo = Cairo({
 export const metadata: Metadata = {
   title: "CBD Online Banking",
   description: "Commercial Bank of Dubai — online banking",
-  icons: {
-    icon: "/brand/favicon.ico",
-    apple: "/brand/cbd-logo-sm.png",
-  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
