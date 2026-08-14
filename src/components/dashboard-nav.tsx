@@ -2,18 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
+import type { MessageKey } from "@/lib/messages";
 
-export const dashboardTabs = [
-  { href: "/dashboard", label: "Accounts" },
-  { href: "/dashboard/transfers", label: "Transfers" },
-  { href: "/dashboard/payments", label: "Payments" },
-  { href: "/dashboard/cards", label: "Cards" },
-  { href: "/dashboard/statements", label: "Statements" },
-  { href: "/dashboard/settings", label: "Settings" },
-] as const;
+export const dashboardTabs: { href: string; labelKey: MessageKey }[] = [
+  { href: "/dashboard", labelKey: "nav.accounts" },
+  { href: "/dashboard/transfers", labelKey: "nav.transfers" },
+  { href: "/dashboard/payments", labelKey: "nav.payments" },
+  { href: "/dashboard/cards", labelKey: "nav.cards" },
+  { href: "/dashboard/statements", labelKey: "nav.statements" },
+  { href: "/dashboard/settings", labelKey: "nav.settings" },
+];
 
 export function DashboardNav() {
   const pathname = usePathname();
+  const { t } = useI18n();
 
   return (
     <header className="border-b border-[#d8e0ec] bg-white">
@@ -33,7 +36,7 @@ export function DashboardNav() {
                   : "text-cbd-muted hover:bg-[#eef2f7]"
               }`}
             >
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           );
         })}

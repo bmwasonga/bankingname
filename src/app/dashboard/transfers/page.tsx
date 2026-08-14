@@ -1,42 +1,51 @@
+"use client";
+
 import { ActionForm } from "@/components/action-form";
+import { useI18n } from "@/lib/i18n";
 import { account, beneficiaries, formatMoney } from "@/lib/account";
 
 const field =
   "w-full rounded-xl border border-[#d8e0ec] bg-[#f4f7fb] px-4 py-3 text-sm text-cbd-ink outline-none ring-cbd-blue focus:ring-2";
 
 export default function TransfersPage() {
+  const { t } = useI18n();
+
   return (
     <div className="mx-auto grid max-w-4xl gap-6 lg:grid-cols-[1fr_280px]">
       <section className="rounded-2xl border border-[#d8e0ec] bg-white p-5 sm:p-8">
         <h1 className="text-xl font-bold text-cbd-ink sm:text-2xl">
-          Transfer funds
+          {t("transfers.title")}
         </h1>
-        <p className="mt-1 text-sm text-cbd-muted">
-          Move money between your CBD accounts or to a saved beneficiary.
-        </p>
+        <p className="mt-1 text-sm text-cbd-muted">{t("transfers.sub")}</p>
 
         <div className="mt-6">
           <ActionForm
-            submitLabel="Submit transfer"
-            success="Transfer submitted for processing. It will appear in activity once posted."
+            submitLabel={t("transfers.submit")}
+            success={t("transfers.success")}
           >
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                From
+                {t("transfers.from")}
               </span>
               <select className={field} defaultValue="usd" name="from">
                 <option value="usd">
-                  USD Current ••••8901 — {formatMoney(account.availableBalance)}
+                  {t("transfers.fromUsd", {
+                    amount: formatMoney(account.availableBalance),
+                  })}
                 </option>
-                <option value="aed">AED Current ••••4412</option>
-                <option value="savings">USD Savings ••••7730</option>
+                <option value="aed">{t("transfers.fromAed")}</option>
+                <option value="savings">{t("transfers.fromSavings")}</option>
               </select>
             </label>
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                To
+                {t("transfers.to")}
               </span>
-              <select className={field} defaultValue={beneficiaries[0].iban} name="to">
+              <select
+                className={field}
+                defaultValue={beneficiaries[0].iban}
+                name="to"
+              >
                 {beneficiaries.map((item) => (
                   <option key={item.iban} value={item.iban}>
                     {item.name} — {item.bank}
@@ -46,7 +55,7 @@ export default function TransfersPage() {
             </label>
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                Amount (USD)
+                {t("transfers.amount")}
               </span>
               <input
                 className={field}
@@ -57,7 +66,7 @@ export default function TransfersPage() {
             </label>
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                Payment details
+                {t("transfers.details")}
               </span>
               <input
                 className={field}
@@ -72,7 +81,7 @@ export default function TransfersPage() {
       <aside className="space-y-4">
         <section className="rounded-2xl border border-[#d8e0ec] bg-white p-5">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-cbd-muted">
-            Saved beneficiaries
+            {t("transfers.beneficiaries")}
           </h2>
           <ul className="mt-4 space-y-3 text-sm">
             {beneficiaries.map((item) => (

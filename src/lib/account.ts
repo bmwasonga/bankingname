@@ -373,16 +373,16 @@ export function formatMoneyParts(amount: number, currency = "USD") {
   return { prefix: match[1], whole: match[2], cents: match[3] };
 }
 
-export function formatDate(iso: string) {
-  return new Intl.DateTimeFormat("en-GB", {
+export function formatDate(iso: string, locale: "en" | "ar" = "en") {
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-AE" : "en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
   }).format(new Date(iso));
 }
 
-export function formatDateTime(iso: string) {
-  return new Intl.DateTimeFormat("en-GB", {
+export function formatDateTime(iso: string, locale: "en" | "ar" = "en") {
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-AE" : "en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",

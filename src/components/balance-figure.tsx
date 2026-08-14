@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n";
 import { formatMoney, formatMoneyParts } from "@/lib/account";
 
 type BalanceFigureProps = {
@@ -15,6 +16,7 @@ export function BalanceFigure({
   size = "hero",
 }: BalanceFigureProps) {
   const [hidden, setHidden] = useState(false);
+  const { t } = useI18n();
   const parts = formatMoneyParts(amount, currency);
   const hero = size === "hero";
 
@@ -52,10 +54,10 @@ export function BalanceFigure({
         onClick={() => setHidden((value) => !value)}
         className="mb-1 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white/90 hover:bg-white/25"
       >
-        {hidden ? "Show" : "Hide"}
+        {hidden ? t("balance.show") : t("balance.hide")}
       </button>
       <span className="sr-only">
-        {hidden ? "Balance hidden" : formatMoney(amount, currency)}
+        {hidden ? t("balance.hidden") : formatMoney(amount, currency)}
       </span>
     </div>
   );

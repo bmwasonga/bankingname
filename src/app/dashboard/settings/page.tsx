@@ -1,34 +1,42 @@
+"use client";
+
 import { ActionForm } from "@/components/action-form";
+import { useI18n } from "@/lib/i18n";
 import { account } from "@/lib/account";
+import type { Locale } from "@/lib/messages";
 
 const field =
   "w-full rounded-xl border border-[#d8e0ec] bg-[#f4f7fb] px-4 py-3 text-sm text-cbd-ink outline-none ring-cbd-blue focus:ring-2";
 
 export default function SettingsPage() {
+  const { t, locale, setLocale } = useI18n();
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <section className="rounded-2xl border border-[#d8e0ec] bg-white p-5 sm:p-8">
         <h1 className="text-xl font-bold text-cbd-ink sm:text-2xl">
-          Profile & settings
+          {t("settings.title")}
         </h1>
-        <p className="mt-1 text-sm text-cbd-muted">
-          Contact details used for OTP and statements.
-        </p>
+        <p className="mt-1 text-sm text-cbd-muted">{t("settings.sub")}</p>
 
         <div className="mt-6">
           <ActionForm
-            submitLabel="Save changes"
-            success="Settings updated. Changes will apply on your next login."
+            submitLabel={t("settings.save")}
+            success={t("settings.success")}
           >
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                Account holder
+                {t("settings.holder")}
               </span>
-              <input className={field} defaultValue={account.holder} name="name" />
+              <input
+                className={field}
+                defaultValue={account.holder}
+                name="name"
+              />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                Customer ID
+                {t("settings.customerId")}
               </span>
               <input
                 className={`${field} bg-[#eef2f7]`}
@@ -39,7 +47,7 @@ export default function SettingsPage() {
             </label>
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                Mobile
+                {t("settings.mobile")}
               </span>
               <input
                 className={field}
@@ -49,7 +57,7 @@ export default function SettingsPage() {
             </label>
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                Email
+                {t("settings.email")}
               </span>
               <input
                 className={field}
@@ -59,16 +67,21 @@ export default function SettingsPage() {
             </label>
             <label className="block">
               <span className="mb-1.5 block text-sm font-medium text-cbd-ink">
-                Language
+                {t("settings.language")}
               </span>
-              <select className={field} defaultValue="en" name="language">
-                <option value="en">English</option>
-                <option value="ar">العربية</option>
+              <select
+                className={field}
+                name="language"
+                value={locale}
+                onChange={(event) => setLocale(event.target.value as Locale)}
+              >
+                <option value="en">{t("settings.english")}</option>
+                <option value="ar">{t("settings.arabic")}</option>
               </select>
             </label>
             <label className="flex items-center gap-2 text-sm text-cbd-ink">
               <input defaultChecked type="checkbox" />
-              SMS and email alerts for transfers over USD 10,000
+              {t("settings.alerts")}
             </label>
           </ActionForm>
         </div>

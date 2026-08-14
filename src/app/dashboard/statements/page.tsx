@@ -1,15 +1,18 @@
+"use client";
+
+import { useI18n } from "@/lib/i18n";
 import { formatDate, statements } from "@/lib/account";
 
 export default function StatementsPage() {
+  const { t, locale } = useI18n();
+
   return (
     <section className="mx-auto max-w-4xl rounded-2xl border border-[#d8e0ec] bg-white">
       <div className="border-b border-[#d8e0ec] px-5 py-5 sm:px-8">
         <h1 className="text-xl font-bold text-cbd-ink sm:text-2xl">
-          Statements
+          {t("statements.title")}
         </h1>
-        <p className="mt-1 text-sm text-cbd-muted">
-          Monthly e-statements for USD Current ••••8901.
-        </p>
+        <p className="mt-1 text-sm text-cbd-muted">{t("statements.sub")}</p>
       </div>
       <ul className="divide-y divide-[#eef2f7]">
         {statements.map((item) => (
@@ -20,14 +23,17 @@ export default function StatementsPage() {
             <div>
               <p className="font-medium text-cbd-ink">{item.period}</p>
               <p className="text-xs text-cbd-muted">
-                Issued {formatDate(item.issued)} · {item.ref}
+                {t("statements.issued", {
+                  date: formatDate(item.issued, locale),
+                  ref: item.ref,
+                })}
               </p>
             </div>
             <button
               type="button"
               className="w-fit rounded-lg bg-cbd-blue px-3 py-2 text-sm font-semibold text-white hover:bg-cbd-blue-dark"
             >
-              Download PDF
+              {t("statements.download")}
             </button>
           </li>
         ))}
