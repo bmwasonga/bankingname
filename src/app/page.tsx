@@ -20,7 +20,7 @@ export default function LoginPage() {
           className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-cbd-lime/20 blur-3xl"
         />
 
-        <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center gap-10 px-6 py-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+        <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-10 px-4 py-10 text-center sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:text-left">
           <div className="max-w-xl text-white">
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-cbd-lime">
               CBD Online Banking
@@ -28,11 +28,11 @@ export default function LoginPage() {
             <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
               Banking made simple, secure, and personal
             </h1>
-            <p className="mt-4 max-w-md text-base text-white/80 md:text-lg">
+            <p className="mx-auto mt-4 max-w-md text-base text-white/80 md:text-lg lg:mx-0">
               Sign in to manage your accounts, transfers, cards, and statements
               with Commercial Bank of Dubai.
             </p>
-            <ul className="mt-8 space-y-2 text-sm text-white/75">
+            <ul className="mx-auto mt-8 max-w-md space-y-2 text-sm text-white/75 lg:mx-0">
               <li>· 24/7 access to your USD and AED accounts</li>
               <li>· Instant transfers and bill payments</li>
               <li>· Protected with multi-factor authentication</li>
@@ -41,7 +41,7 @@ export default function LoginPage() {
 
           <form
             action="/dashboard"
-            className="w-full max-w-md rounded-2xl border border-white/20 bg-white p-6 shadow-2xl shadow-black/25 md:p-8"
+            className="w-full max-w-md rounded-2xl border border-white/20 bg-white p-6 text-left shadow-2xl shadow-black/25 md:p-8"
           >
             <div className="mb-6 flex items-center justify-between border-b border-[#eef2f7] pb-5">
               <div>

@@ -10,13 +10,40 @@ export const account = {
   iban: "AE46 0230 0012 3456 7890 123",
   swift: "CBDUAEAD",
   currency: "USD",
-  balance: 20_000_000,
-  availableBalance: 20_000_000,
-  ledgerBalance: 20_000_000,
+  availableBalance: 20_047_862.18,
+  ledgerBalance: 20_062_140.18,
+  holdAmount: 14_278.0,
   status: "Active",
   openedOn: "2019-03-14",
   lastLogin: "2026-08-14T01:42:00+04:00",
 };
+
+export const relatedAccounts = [
+  {
+    id: "usd",
+    product: "Current Account — USD",
+    masked: "••••8901",
+    currency: "USD",
+    available: 20_047_862.18,
+    primary: true,
+  },
+  {
+    id: "aed",
+    product: "Current Account — AED",
+    masked: "••••4412",
+    currency: "AED",
+    available: 3_842_190.55,
+    primary: false,
+  },
+  {
+    id: "savings",
+    product: "CBD Savings — USD",
+    masked: "••••7730",
+    currency: "USD",
+    available: 1_285_440.9,
+    primary: false,
+  },
+];
 
 export type Transaction = {
   id: string;
@@ -32,8 +59,9 @@ export type Transaction = {
   status: "Posted" | "Pending";
 };
 
-/** Newest first. Running balances end at the current available balance. */
-export const transactions: Transaction[] = [
+type TxInput = Omit<Transaction, "balanceAfter">;
+
+const rawTransactions: TxInput[] = [
   {
     id: "TXN-260814-01942",
     date: "2026-08-13",
@@ -44,7 +72,6 @@ export const transactions: Transaction[] = [
     channel: "SWIFT",
     type: "credit",
     amount: 1_250_000,
-    balanceAfter: 20_000_000,
     status: "Posted",
   },
   {
@@ -57,7 +84,6 @@ export const transactions: Transaction[] = [
     channel: "CBD App",
     type: "debit",
     amount: 186_400,
-    balanceAfter: 18_750_000,
     status: "Posted",
   },
   {
@@ -69,8 +95,7 @@ export const transactions: Transaction[] = [
     reference: "DIV260810009331",
     channel: "Standing Order",
     type: "credit",
-    amount: 97_850,
-    balanceAfter: 18_936_400,
+    amount: 97_850.4,
     status: "Posted",
   },
   {
@@ -83,7 +108,6 @@ export const transactions: Transaction[] = [
     channel: "SWIFT",
     type: "debit",
     amount: 425_000,
-    balanceAfter: 18_838_550,
     status: "Posted",
   },
   {
@@ -96,7 +120,6 @@ export const transactions: Transaction[] = [
     channel: "Card",
     type: "debit",
     amount: 18_760.45,
-    balanceAfter: 19_263_550,
     status: "Posted",
   },
   {
@@ -109,7 +132,6 @@ export const transactions: Transaction[] = [
     channel: "SWIFT",
     type: "credit",
     amount: 185_000,
-    balanceAfter: 19_282_310.45,
     status: "Posted",
   },
   {
@@ -122,7 +144,6 @@ export const transactions: Transaction[] = [
     channel: "CBD App",
     type: "debit",
     amount: 42_318.9,
-    balanceAfter: 19_097_310.45,
     status: "Posted",
   },
   {
@@ -135,7 +156,6 @@ export const transactions: Transaction[] = [
     channel: "Branch",
     type: "debit",
     amount: 75_000,
-    balanceAfter: 19_139_629.35,
     status: "Posted",
   },
   {
@@ -148,7 +168,6 @@ export const transactions: Transaction[] = [
     channel: "CBD App",
     type: "debit",
     amount: 64_500,
-    balanceAfter: 19_214_629.35,
     status: "Posted",
   },
   {
@@ -161,7 +180,6 @@ export const transactions: Transaction[] = [
     channel: "SWIFT",
     type: "credit",
     amount: 820_000,
-    balanceAfter: 19_279_129.35,
     status: "Posted",
   },
   {
@@ -174,7 +192,6 @@ export const transactions: Transaction[] = [
     channel: "Standing Order",
     type: "debit",
     amount: 128_900,
-    balanceAfter: 18_459_129.35,
     status: "Posted",
   },
   {
@@ -187,7 +204,6 @@ export const transactions: Transaction[] = [
     channel: "Card",
     type: "debit",
     amount: 9_842.75,
-    balanceAfter: 18_588_029.35,
     status: "Posted",
   },
   {
@@ -200,7 +216,6 @@ export const transactions: Transaction[] = [
     channel: "Branch",
     type: "debit",
     amount: 25_000,
-    balanceAfter: 18_597_872.1,
     status: "Posted",
   },
   {
@@ -213,7 +228,6 @@ export const transactions: Transaction[] = [
     channel: "Standing Order",
     type: "credit",
     amount: 510_000,
-    balanceAfter: 18_622_872.1,
     status: "Posted",
   },
   {
@@ -226,7 +240,6 @@ export const transactions: Transaction[] = [
     channel: "Standing Order",
     type: "debit",
     amount: 14_220.3,
-    balanceAfter: 18_112_872.1,
     status: "Posted",
   },
   {
@@ -239,7 +252,6 @@ export const transactions: Transaction[] = [
     channel: "CBD App",
     type: "credit",
     amount: 350_000,
-    balanceAfter: 18_127_092.4,
     status: "Posted",
   },
   {
@@ -252,7 +264,6 @@ export const transactions: Transaction[] = [
     channel: "SWIFT",
     type: "debit",
     amount: 95_000,
-    balanceAfter: 17_777_092.4,
     status: "Posted",
   },
   {
@@ -265,9 +276,84 @@ export const transactions: Transaction[] = [
     channel: "ATM",
     type: "debit",
     amount: 2_000,
-    balanceAfter: 17_872_092.4,
     status: "Posted",
   },
+];
+
+function withRunningBalances(items: TxInput[], endingBalance: number): Transaction[] {
+  let running = endingBalance;
+  return items.map((tx) => {
+    const row = { ...tx, balanceAfter: Number(running.toFixed(2)) };
+    running = tx.type === "credit" ? running - tx.amount : running + tx.amount;
+    return row;
+  });
+}
+
+export const transactions = withRunningBalances(
+  rawTransactions,
+  account.availableBalance,
+);
+
+export const beneficiaries = [
+  {
+    name: "Al Hamad Holdings LLC",
+    bank: "Emirates NBD",
+    iban: "AE12 0336 0000 1234 5678 901",
+  },
+  {
+    name: "ExecuJet Middle East FZCO",
+    bank: "Mashreq",
+    iban: "AE33 0233 0000 9988 7766 554",
+  },
+  {
+    name: "HSBC Private Bank Geneva",
+    bank: "HSBC / SWIFT",
+    iban: "CH93 0076 2011 6238 5295 7",
+  },
+];
+
+export const bills = [
+  { payee: "DEWA", category: "Utilities", amount: 4_812.35, due: "2026-08-22" },
+  { payee: "Etisalat", category: "Telecom", amount: 1_240.0, due: "2026-08-18" },
+  { payee: "Salik", category: "Transport", amount: 320.5, due: "2026-08-16" },
+  {
+    payee: "Dubai Municipality",
+    category: "Government",
+    amount: 2_150.0,
+    due: "2026-08-28",
+  },
+];
+
+export const cards = [
+  {
+    name: "CBD Infinite Visa",
+    type: "Credit",
+    last4: "4821",
+    holder: "Prince Hamad",
+    expiry: "09/28",
+    limit: 250_000,
+    available: 207_681.1,
+    status: "Active",
+  },
+  {
+    name: "CBD Debit Mastercard",
+    type: "Debit",
+    last4: "8901",
+    holder: "Prince Hamad",
+    expiry: "03/29",
+    limit: null,
+    available: 20_047_862.18,
+    status: "Active",
+  },
+];
+
+export const statements = [
+  { period: "July 2026", issued: "2026-08-01", ref: "STMT-USD-2026-07" },
+  { period: "June 2026", issued: "2026-07-01", ref: "STMT-USD-2026-06" },
+  { period: "May 2026", issued: "2026-06-01", ref: "STMT-USD-2026-05" },
+  { period: "April 2026", issued: "2026-05-01", ref: "STMT-USD-2026-04" },
+  { period: "March 2026", issued: "2026-04-01", ref: "STMT-USD-2026-03" },
+  { period: "February 2026", issued: "2026-03-01", ref: "STMT-USD-2026-02" },
 ];
 
 export function formatMoney(amount: number, currency = "USD") {
@@ -276,6 +362,15 @@ export function formatMoney(amount: number, currency = "USD") {
     currency,
     minimumFractionDigits: 2,
   }).format(amount);
+}
+
+export function formatMoneyParts(amount: number, currency = "USD") {
+  const formatted = formatMoney(amount, currency);
+  const match = formatted.match(/^(.*?)([\d,]+)(\.\d{2})$/);
+  if (!match) {
+    return { prefix: "", whole: formatted, cents: "" };
+  }
+  return { prefix: match[1], whole: match[2], cents: match[3] };
 }
 
 export function formatDate(iso: string) {

@@ -10,7 +10,7 @@ export function AppHeader({ mode, holderName }: AppHeaderProps) {
   return (
     <>
       <div className="bg-cbd-blue-dark text-xs text-white/80">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-6 py-2">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-2 text-center sm:justify-between sm:px-6 sm:text-left">
           {mode === "login" ? (
             <>
               <p>Commercial Bank of Dubai · Online Banking</p>
@@ -26,7 +26,7 @@ export function AppHeader({ mode, holderName }: AppHeaderProps) {
       </div>
 
       <header className="border-b border-[#d8e0ec] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-4 px-4 py-4 sm:justify-between sm:px-6">
           <div className="flex items-center gap-4">
             <CbdLogo variant="compact" priority />
             <div className="hidden border-l border-[#d8e0ec] pl-4 sm:block">
